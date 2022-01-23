@@ -1,0 +1,159 @@
+
+    <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8" />
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- jquery -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js" type="text/javascript"></script>
+      <!-- Bootstrap CSS -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+      <!-- Bootstrap Bundle with Popper -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+      <link rel="stylesheet" type="text/css" href="style.css">
+      <title>Interpretability Test</title>
+    </head>
+    <body>
+      <script language="javascript">
+        // record starting time
+        var start = new Date();
+
+        // validate form and record ending time when submitting the form
+        function validateForm() {
+            var radios = document.getElementsByName('choice');
+            var radioChecked = false;
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    radioChecked = true;
+                    break;
+                }
+            }
+
+            var conf_radios = document.getElementsByName('conf_range');
+            var conf_radiosChecked = false;
+            for (var i = 0; i < conf_radios.length; i++) {
+                if (conf_radios[i].checked) {
+                    conf_radiosChecked = true;
+                    break;
+                }
+            }
+
+            if (!radioChecked){
+                alert("You must make a choice: agree or disagree.");
+                return false;
+            }
+            else if (!conf_radiosChecked){
+                alert("You must make a choice: confidence score.");
+                return false;
+            }else{
+
+                // count time
+                var exit = new Date();
+                hours = (exit.getHours() - start.getHours());
+                minutes = (exit.getMinutes() - start.getMinutes());
+                seconds = (exit.getSeconds() - start.getSeconds());
+                if (hours == 0){
+                    time = seconds + (minutes * 60);
+                }else{
+                    time = (3600*hours + (minutes * 60)) + seconds;
+                }
+                document.getElementById('timer').value = time;
+                return true;
+            }
+        }
+      </script>
+
+      <div id='container-fluid'>
+        <nav class="navbar navbar-dark bg-primary justify-content-center">
+          <span style="font-size: 35px; color: white;">MeSH Topic Judgement</span>
+        </nav>
+        <div class="row">
+          <div class="col-md-2">
+            <div class="classWithPad">
+              <h2><i class="bi bi-bookmarks-fill" style="font-size: 2rem;"></i> Topics</h2>
+              <ul class="list-group">
+                <li class="list-group-item" id="genetics">genetics</li>
+                <li class="list-group-item" id="metabolism">metabolism</li>
+                <li class="list-group-item" id="therapy">therapy</li>
+                <li class="list-group-item" id="pathology">pathology</li>
+                <li class="list-group-item" id="drug effects">drug effects</li>
+                <li class="list-group-item" id="surgery">surgery</li>
+                <li class="list-group-item" id="hematology">hematology</li>
+                <li class="list-group-item" id="immunology">immunology</li>
+                <li class="list-group-item" id="diagnosis">diagnosis</li>
+                <li class="list-group-item" id="mortality">mortality</li>
+                <li class="list-group-item" id="epidemiology">epidemiology</li>
+                <li class="list-group-item" id="complications">complications</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-md-7">
+            <div class="classWithPad">
+              <h2><i class="bi bi-pin-fill" style="font-size: 2rem;"></i> Medical Subject</h2>
+              <span id='selected_topic'></span><br><br>
+              <h2><i class="bi bi-bookmark-star-fill" style="font-size: 2rem;"></i> Topic</h2>
+              <span id='selected_qualifiers'></span><br>
+              <span id='selected_qualifier_definition'></span><br>
+              <span id="_pmid" style="visibility: hidden">3810368_1</span>
+              <h2><i class="bi bi-stickies-fill" style="font-size: 2rem;"></i> Article</h2>
+              <div id='contents'></div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="classWithPad">
+                <div id='explanation_title' style="visibility:hidden;"><h2><i class="bi bi-chat-square-dots-fill" style="font-size: 2rem;"></i> Explanation</h2></div>
+                <div id="explanation"></div>
+              <br>
+              <div id='userform'>
+                <h2><i class="bi bi-question-square-fill" style="font-size: 2rem;"></i> Your Judgment</h2>
+                <span id='question'></span>
+                <form onsubmit="return validateForm(this);" action="index.html" method="post">
+                  <input type="hidden" id= "test_version" name="test_version" value="1">
+                  <input type="hidden" id="pmid" name="pmid" value="3810368_1">
+                  <input type="hidden" id="step" name="step" value="2">
+                  <input type="hidden" id="category" name="category" value="FP">
+                  <input type="hidden" id="next_pmid" name="next_pmid" value="qualtrics">
+                  <input type="hidden" id="timer" name="timer" value="0">
+                  <div class="btn-group" role="group" aria-label="radio button group" style="margin-top: 10px; margin-bottom: 10px;">
+                    <input type="radio" class="btn-check" name="choice" id="choice1" autocomplete="off" value="yes"><label class="btn btn-outline-secondary" for="choice1"><i class="bi bi-hand-thumbs-up" style="font-size: 1rem;"></i> Yes</label>
+                    <input type="radio" class="btn-check" name="choice" id="choice2" autocomplete="off" value="no"><label class="btn btn-outline-secondary" for="choice2"><i class="bi bi-hand-thumbs-down" style="font-size: 1rem;"></i> No</label>
+                  </div>
+                  <div>
+                  <p style="font-size: x-large; padding-top:3px;">How confident are you about your choice?</p>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="conf_range" id="conf_choice1" value="1" autocomplete="off"><label class="form-check-label" for="conf_choice1">Not at all confident</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="conf_range" id="conf_choice2" value="2" autocomplete="off"><label class="form-check-label" for="conf_choice2">Less confident</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="conf_range" id="conf_choice3" value="3" autocomplete="off"><label class="form-check-label" for="conf_choice3">Moderately confident</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="conf_range" id="conf_choice4" value="4" autocomplete="off"><label class="form-check-label" for="conf_choice4">Confident</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="conf_range" id="conf_choice5" value="5" autocomplete="off"><label class="form-check-label" for="conf_choice5">Extremely confident</label>
+                 </div>
+                  </div>
+                  <br>
+                  <input type="submit" value="Submit" class="btn btn-warning">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+    <footer>
+      <script type="text/javascript" src="load_contents.js"></script>
+      <script type="text/javascript" src="change_format.js"></script>
+    </footer>
+  </html>
+
